@@ -1,0 +1,327 @@
+[
+  {
+    "case_id": "us_wts-lg-000148",
+    "region": "us",
+    "image_file": "us_wts-lg-000148.jpg",
+    "bbox_xywh": [
+      293,
+      325,
+      89,
+      44
+    ],
+    "text_gt": "6TIX874",
+    "clean_detection_iou": 0.793
+  },
+  {
+    "case_id": "us_wts-lg-000016",
+    "region": "us",
+    "image_file": "us_wts-lg-000016.jpg",
+    "bbox_xywh": [
+      516,
+      310,
+      110,
+      55
+    ],
+    "text_gt": "DL3C2Z",
+    "clean_detection_iou": 0.894
+  },
+  {
+    "case_id": "us_wts-lg-000010",
+    "region": "us",
+    "image_file": "us_wts-lg-000010.jpg",
+    "bbox_xywh": [
+      464,
+      440,
+      115,
+      57
+    ],
+    "text_gt": "HH9G5W",
+    "clean_detection_iou": 0.866
+  },
+  {
+    "case_id": "us_car3",
+    "region": "us",
+    "image_file": "us_car3.jpg",
+    "bbox_xywh": [
+      395,
+      535,
+      121,
+      60
+    ],
+    "text_gt": "1AMW240",
+    "clean_detection_iou": 0.811
+  },
+  {
+    "case_id": "us_wts-lg-000048",
+    "region": "us",
+    "image_file": "us_wts-lg-000048.jpg",
+    "bbox_xywh": [
+      488,
+      593,
+      74,
+      37
+    ],
+    "text_gt": "FE5R2D",
+    "clean_detection_iou": 0.881
+  },
+  {
+    "case_id": "us_car5",
+    "region": "us",
+    "image_file": "us_car5.jpg",
+    "bbox_xywh": [
+      260,
+      248,
+      87,
+      43
+    ],
+    "text_gt": "59CADI",
+    "clean_detection_iou": 0.843
+  },
+  {
+    "case_id": "us_us5",
+    "region": "us",
+    "image_file": "us_us5.jpg",
+    "bbox_xywh": [
+      841,
+      666,
+      227,
+      113
+    ],
+    "text_gt": "NEILDMND",
+    "clean_detection_iou": 0.92
+  },
+  {
+    "case_id": "us_wts-lg-000061",
+    "region": "us",
+    "image_file": "us_wts-lg-000061.jpg",
+    "bbox_xywh": [
+      307,
+      155,
+      73,
+      36
+    ],
+    "text_gt": "DK2Z5S",
+    "clean_detection_iou": 0.853
+  },
+  {
+    "case_id": "us_wts-lg-000137",
+    "region": "us",
+    "image_file": "us_wts-lg-000137.jpg",
+    "bbox_xywh": [
+      659,
+      322,
+      140,
+      70
+    ],
+    "text_gt": "CWW2245",
+    "clean_detection_iou": 0.932
+  },
+  {
+    "case_id": "us_wts-lg-000179",
+    "region": "us",
+    "image_file": "us_wts-lg-000179.jpg",
+    "bbox_xywh": [
+      638,
+      162,
+      77,
+      38
+    ],
+    "text_gt": "SL7J8R",
+    "clean_detection_iou": 0.861
+  },
+  {
+    "case_id": "us_wts-lg-000154",
+    "region": "us",
+    "image_file": "us_wts-lg-000154.jpg",
+    "bbox_xywh": [
+      246,
+      305,
+      95,
+      47
+    ],
+    "text_gt": "1366026",
+    "clean_detection_iou": 0.879
+  },
+  {
+    "case_id": "us_wts-lg-000163",
+    "region": "us",
+    "image_file": "us_wts-lg-000163.jpg",
+    "bbox_xywh": [
+      731,
+      90,
+      103,
+      51
+    ],
+    "text_gt": "CDK575",
+    "clean_detection_iou": 0.885
+  },
+  {
+    "case_id": "us_12c6cb72-3ea3-49e7-b381-e0cdfc5e8960",
+    "region": "us",
+    "image_file": "us_12c6cb72-3ea3-49e7-b381-e0cdfc5e8960.jpg",
+    "bbox_xywh": [
+      911,
+      136,
+      62,
+      31
+    ],
+    "text_gt": "0SG719",
+    "clean_detection_iou": 0.0
+  },
+  {
+    "case_id": "eu_test_072",
+    "region": "eu",
+    "image_file": "eu_test_072.jpg",
+    "bbox_xywh": [
+      103,
+      139,
+      95,
+      21
+    ],
+    "text_gt": "4B39376",
+    "clean_detection_iou": 0.814
+  },
+  {
+    "case_id": "eu_test_057",
+    "region": "eu",
+    "image_file": "eu_test_057.jpg",
+    "bbox_xywh": [
+      147,
+      222,
+      102,
+      23
+    ],
+    "text_gt": "RK300AS",
+    "clean_detection_iou": 0.894
+  },
+  {
+    "case_id": "eu_test_090",
+    "region": "eu",
+    "image_file": "eu_test_090.jpg",
+    "bbox_xywh": [
+      164,
+      240,
+      146,
+      33
+    ],
+    "text_gt": "RK550AO",
+    "clean_detection_iou": 0.757
+  },
+  {
+    "case_id": "eu_test_008",
+    "region": "eu",
+    "image_file": "eu_test_008.jpg",
+    "bbox_xywh": [
+      165,
+      282,
+      124,
+      28
+    ],
+    "text_gt": "LM298AI",
+    "clean_detection_iou": 0.848
+  },
+  {
+    "case_id": "eu_test_010",
+    "region": "eu",
+    "image_file": "eu_test_010.jpg",
+    "bbox_xywh": [
+      113,
+      179,
+      137,
+      31
+    ],
+    "text_gt": "RK248AH",
+    "clean_detection_iou": 0.872
+  },
+  {
+    "case_id": "eu_test_026",
+    "region": "eu",
+    "image_file": "eu_test_026.jpg",
+    "bbox_xywh": [
+      70,
+      254,
+      113,
+      26
+    ],
+    "text_gt": "RK492AU",
+    "clean_detection_iou": 0.89
+  },
+  {
+    "case_id": "br_OYJ9557",
+    "region": "br",
+    "image_file": "br_OYJ9557.jpg",
+    "bbox_xywh": [
+      493,
+      640,
+      233,
+      75
+    ],
+    "text_gt": "OYJ9557",
+    "clean_detection_iou": 0.961
+  },
+  {
+    "case_id": "br_JSG9648",
+    "region": "br",
+    "image_file": "br_JSG9648.jpg",
+    "bbox_xywh": [
+      571,
+      570,
+      227,
+      73
+    ],
+    "text_gt": "JSG9648",
+    "clean_detection_iou": 0.912
+  },
+  {
+    "case_id": "br_OKT3896",
+    "region": "br",
+    "image_file": "br_OKT3896.jpg",
+    "bbox_xywh": [
+      466,
+      697,
+      241,
+      78
+    ],
+    "text_gt": "OKT3896",
+    "clean_detection_iou": 0.837
+  },
+  {
+    "case_id": "br_OUP9563",
+    "region": "br",
+    "image_file": "br_OUP9563.jpg",
+    "bbox_xywh": [
+      502,
+      617,
+      255,
+      82
+    ],
+    "text_gt": "OUP9563",
+    "clean_detection_iou": 0.86
+  },
+  {
+    "case_id": "br_PJP2783",
+    "region": "br",
+    "image_file": "br_PJP2783.jpg",
+    "bbox_xywh": [
+      439,
+      817,
+      379,
+      123
+    ],
+    "text_gt": "PJP2783",
+    "clean_detection_iou": 0.868
+  },
+  {
+    "case_id": "br_PJJ4955",
+    "region": "br",
+    "image_file": "br_PJJ4955.jpg",
+    "bbox_xywh": [
+      397,
+      678,
+      312,
+      101
+    ],
+    "text_gt": "PJJ4955",
+    "clean_detection_iou": 0.894
+  }
+]
