@@ -13,9 +13,9 @@ composited dataset and classical Tesseract OCR; that's preserved in
 `archive_v1_synthetic/` for reference, but superseded by everything
 below. -->
 
-## Getting started from scratch (clone → venv → install → run)
+## Getting started:
 
-If you're setting this up on a new machine for the first time:
+If you're setting this up on a new machine for the first time (you must have python installed on your computer to run this project):
 
 ```powershell
 # 1. Clone this repo
