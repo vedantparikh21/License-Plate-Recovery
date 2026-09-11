@@ -7,19 +7,43 @@ available benchmark dataset** and **off-the-shelf pretrained models**
 for detection and OCR (no training or fine-tuning anywhere in this
 project).
 
-See `report/REPORT.md` for the full write-up. 
+See `report/REPORT.md` for the full write-up.
 <!-- This is the second iteration of this project — an earlier version used a synthetic,
 composited dataset and classical Tesseract OCR; that's preserved in
 `archive_v1_synthetic/` for reference, but superseded by everything
 below. -->
 
-## Quick start: see it work in 30 seconds
+## Getting started from scratch (clone → venv → install → run)
+
+If you're setting this up on a new machine for the first time:
+
+```powershell
+# 1. Clone this repo
+git clone https://github.com/vedantparikh21/License-Plate-Recovery.git
+cd License-Plate-Recovery
+
+# 2. Create and activate a virtual environment
+python -m venv venv
+venv\Scripts\activate          # Windows (PowerShell)
+# source venv/bin/activate     # Linux/Mac
+
+# 3. Install dependencies
+pip install fast-alpr[onnx] opencv-contrib-python numpy scikit-image pillow
+```
+
+That's the entire dependency list — no GPU, no other setup. From here,
+jump to **Quick start** below to try the live demo immediately, or
+**How to run** further down to reproduce the full offline evaluation.
+
+## Quick start: 
 
 `src/live_demo.py` is the main interactive entry point — point it at
 any image (or your webcam) and it runs the full pipeline live: detects
 the plate, shows plain OCR vs. enhanced OCR side by side, and saves the
 result. This is the fastest way to see the whole thing work end to end
 without running the full offline evaluation below.
+
+**Note**: you would need to have image(s) of License Plate for testing out this file!.
 
 ```powershell
 python src/live_demo.py
@@ -58,15 +82,6 @@ before/after galleries) that this live demo is built on top of.
 **No GPU needed anywhere in this pipeline** — everything above runs on
 CPU. There's nothing here that needs to be handed off to a laptop or to
 Kaggle.
-
-## Requirements
-
-```bash
-pip install fast-alpr[onnx] opencv-contrib-python numpy scikit-image pillow
-```
-
-That's the entire dependency list. `fast-alpr` auto-downloads its two
-pretrained ONNX models (~11MB total) the first time it runs.
 
 ## Project layout
 
@@ -169,8 +184,6 @@ cached and loads instantly.
   dataset.
 - **Written analysis, metric justification, failure-case discussion**:
   `report/REPORT.md`.
-
-
 
 ## Live demo
 
