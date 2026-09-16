@@ -1,56 +1,18 @@
 """
-License-plate region detection.
+Shared geometry helpers used by the rest of the pipeline.
 
-Primary method: classical contour-based rectangle detection (edge map ->
-contours -> filter by aspect ratio / area / rectangularity). This is used
-as the primary detector because it is explainable, needs no training data,
-and — as shown in the report — generalizes reasonably to plate-like
-rectangles without being tied to one country's plate design.
+Plate *detection* itself is not done here -- it's the pretrained YOLOv9-t
+detector wrapped in pretrained_models.py (see report/REPORT.md and
+README.md). This module only holds the geometry utilities every other
+stage needs on top of that detector's output: IoU scoring against
+ground truth, and margin-padded cropping around a box.
 
-Secondary method: OpenCV's bundled Haar cascade, included for comparison.
-Both are evaluated in the report; the Haar cascade is shown to perform
-worse on our (partly non-Russian-style) test scenes, which is discussed
-as a failure case.
+(An earlier iteration of this project used classical contour-based
+rectangle detection and a Haar cascade as the plate localizer, before
+the pretrained detector replaced them in v2. That code has been removed
+from this file since it's no longer part of the pipeline -- see
+archive_v1_synthetic/ if you want to see what it looked like.)
 """
-import cv2
-import numpy as np
-
-
-def detect_candidates_contour(img, min_area_frac=0.001, max_area_frac=0.08):
-    h, w = img.shape[:2]
-    img_area = h * w
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    blur = cv2.bilateralFilter(gray, 11, 17, 17)
-    edges = cv2.Canny(blur, 30, 200)
-    edges = cv2.dilate(edges, np.ones((3, 3), np.uint8), iterations=1)
-
-    contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-    candidates = []
-    for c in contours:
-        area = cv2.contourArea(c)
-        if area < min_area_frac * img_area or area > max_area_frac * img_area:
-            continue
-        x, y, cw, ch = cv2.boundingRect(c)
-        if ch == 0:
-            continue
-        aspect = cw / float(ch)
-        if 2.0 <= aspect <= 6.0:  # plates are wide rectangles
-            rect_fill = area / float(cw * ch)
-            if rect_fill > 0.5:
-                candidates.append((x, y, cw, ch, rect_fill))
-
-    # Highest rectangularity first
-    candidates.sort(key=lambda t: -t[4])
-    return [(x, y, cw, ch) for (x, y, cw, ch, _) in candidates]
-
-
-def detect_candidates_haar(img, cascade_path=None):
-    if cascade_path is None:
-        cascade_path = cv2.data.haarcascades + "haarcascade_russian_plate_number.xml"
-    cascade = cv2.CascadeClassifier(cascade_path)
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    boxes = cascade.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=3, minSize=(30, 12))
-    return [tuple(b) for b in boxes]
 
 
 def iou(boxA, boxB):
@@ -64,16 +26,6 @@ def iou(boxA, boxB):
     inter_area = inter_w * inter_h
     union = aw * ah + bw * bh - inter_area
     return inter_area / union if union > 0 else 0.0
-
-
-def best_candidate_by_gt(candidates, gt_bbox):
-    """Pick the candidate with highest IoU vs ground truth (evaluation only —
-    a real deployment wouldn't have access to ground truth, see notes)."""
-    if not candidates:
-        return None, 0.0
-    scored = [(c, iou(c, gt_bbox)) for c in candidates]
-    scored.sort(key=lambda t: -t[1])
-    return scored[0]
 
 
 def crop_with_margin(img, bbox, margin_frac=0.12):

@@ -1,0 +1,6 @@
+fast-alpr[onnx]
+opencv-contrib-python
+numpy
+scikit-image
+pillow
+matplotlib

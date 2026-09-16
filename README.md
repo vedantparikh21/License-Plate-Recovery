@@ -28,7 +28,7 @@ venv\Scripts\activate          # Windows (PowerShell)
 # source venv/bin/activate     # Linux/Mac
 
 # 3. Install dependencies
-pip install fast-alpr[onnx] opencv-contrib-python numpy scikit-image pillow
+pip install -r requirements.txt
 ```
 
 That's the entire dependency list — no GPU, no other setup. From here,
@@ -94,6 +94,7 @@ src/
   metrics.py                PSNR / SSIM / character-accuracy scoring
   detect.py                 Shared geometry helpers (IoU, margin-cropping)
   pipeline_real.py           End-to-end experiment runner (25 cases x 9 degradations + video)
+  compare_models.py         Current vs. best-available detector+OCR combo: accuracy AND latency
   make_panels_real.py       Before/after comparison panels
 data/
   real_dataset/              25 curated real photos + manifest.json (bbox + ground-truth text)
@@ -138,6 +139,12 @@ python src/make_panels_real.py
 #    gallery, one case per degradation type (10 total) -- this is the
 #    single document to open to see the full qualitative pipeline output
 python src/make_full_case_gallery.py
+
+# 5. Optional: compare the current detector+OCR combo against the
+#    strongest currently-available one in the same libraries, on
+#    accuracy AND CPU latency (see report §5 for the results and how
+#    to read them)
+python src/compare_models.py
 ```
 
 Step 1 needs internet access once (to clone the benchmark repo). Step 2
@@ -184,6 +191,10 @@ cached and loads instantly.
   dataset.
 - **Written analysis, metric justification, failure-case discussion**:
   `report/REPORT.md`.
+- **Model choice comparison (current vs. best-available, accuracy vs.
+  latency)**: `report/REPORT.md` §5, backed by
+  `data/results_real/model_comparison_summary.md`,
+  `model_comparison.csv`, and `model_comparison_chart.png`.
 
 ## Live demo
 
@@ -237,3 +248,10 @@ type isn't known in advance — see report §6.
   undegraded photo** at the ground-truth box (not a synthetic "ideal"
   reference, since none exists for real photos) — this isolates
   degradation-removal quality from detector localization noise.
+- **Detector/OCR model choice was re-checked, not just asserted.**
+  `src/compare_models.py` runs the current combination (YOLOv9-t-384 +
+  CCT-XS-v2) against the strongest currently-available one in the same
+  libraries (YOLOv9-s-608 + CCT-S-v2) on the same 25 cases, with
+  latency measured alongside accuracy. The bigger combination is only
+  modestly more accurate (+4 points exact-match) for ~6x the per-plate
+  latency — see report §5 for the full numbers and reasoning.

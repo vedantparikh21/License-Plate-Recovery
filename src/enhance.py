@@ -226,26 +226,3 @@ def enhance_adaptive(img, blur_thresh=500.0, noise_thresh=22.5,
     scores = {"blur_score": round(blur_score, 1), "noise_score": round(noise_score, 2),
               "brightness": round(brightness, 1), "applied": applied}
     return out, scores
-    """Legacy single-shot pipeline (scene-level + crop-level combined),
-    kept for the perspective / video code paths that enhance an
-    already-cropped region directly rather than re-detecting on a full
-    scene."""
-    out = img.copy()
-
-    if degradation_type == "motion_blur":
-        out = deconvolve_wiener(out, kernel_size=17, angle=15, K=0.02)
-    elif degradation_type == "defocus_blur":
-        out = deblur_unsharp(out, sigma=2.5, amount=1.6)
-    elif degradation_type == "perspective":
-        out = correct_perspective_auto(out)
-    elif degradation_type == "combined_hard":
-        out = deconvolve_wiener(out, kernel_size=13, angle=10, K=0.03)
-
-    if degradation_type in ("under_exposure", "over_exposure"):
-        out = enhance_contrast_clahe(out)
-    if degradation_type in ("noise", "combined_hard", "jpeg_compression"):
-        out = denoise(out)
-
-    out = enhance_contrast_clahe(out)
-    out = super_resolve(out)
-    return out

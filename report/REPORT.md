@@ -45,7 +45,7 @@ real-world cases rather than cases where the pretrained detector itself
 is fundamentally unable to localize the plate at all. One clear
 exception was deliberately kept: a case where the detector scores 0.0
 IoU even with zero degradation applied, specifically so the failure-case
-discussion in §5 has a genuine example rather than a hypothetical one.
+discussion in §6 has a genuine example rather than a hypothetical one.
 
 Every case has: the real photo, a human-annotated bounding box, and the
 real plate string — all three from the dataset, not synthesized.
@@ -73,7 +73,7 @@ the pretrained OCR again (**enhanced**). Perspective correction is the
 one exception: it operates on an already-isolated crop rather than the
 full scene, and doesn't trigger a full re-detection pass, since undoing
 a projective warp needs the plate's quadrilateral isolated first (see
-§5 for why this matters less than expected here).
+§6 for why this matters less than expected here).
 
 ### 2.3 Metrics (and why)
 
@@ -150,7 +150,7 @@ completely changes what "success" looks like for this project:
   applied conditionally**, based on measured degradation severity, not
   unconditionally on every frame. A production system would benefit
   from a lightweight degradation classifier gating which correction (if
-  any) gets applied — noted in §6.
+  any) gets applied — noted in §8.
 - **Perspective correction barely moves the needle here (92%→92%)**,
   in sharp contrast to the first iteration where it was essential
   (Tesseract went from failing outright to an exact match after
@@ -174,13 +174,61 @@ completely changes what "success" looks like for this project:
   are not interchangeable, and optimizing for one without checking the
   other would be a mistake.
 
-## 5. Failure cases and why
+## 5. Model choice: current vs. best-available combination
+
+The model Q&A from the last interview round covered *why*
+YOLOv9-t-384 and CCT-XS-v2 were chosen. This section answers the
+natural follow-up: what would swapping in the strongest currently
+available combination in the same two libraries actually buy, and at
+what cost?
+
+- **Current**: YOLOv9-t-384 detector + CCT-XS-v2 OCR (used everywhere
+  else in this project).
+- **Best-available**: YOLOv9-s-608 detector — the highest published
+  mAP50 (0.966) in `open-image-models`' own plate-detection model
+  table — + CCT-S-v2 OCR — the `fast-plate-ocr` maintainer's
+  now-recommended default for new integrations.
+
+`src/compare_models.py` runs both combinations on the exact same 25
+curated cases × 9 degradations + 1 clean pass (250 instances per
+combination), with **no enhancement applied**, so the comparison
+isolates the model-choice effect from the enhancement pipeline, which
+is a separate variable already measured in full in §4. It times the
+detector forward pass and the OCR forward pass separately, on the same
+CPU this whole project runs on, after a warm-up call so model-load
+time doesn't pollute the measurement.
+
+| Combination | Exact-match | Char-acc | Det. IoU | Detector (ms) | OCR (ms) | Total (ms/plate) | Throughput (plates/s) |
+|---|---|---|---|---|---|---|---|
+| Current (YOLOv9-t-384 + CCT-XS-v2) | 60% | 0.71 | 0.77 | 38.3 | 3.8 | 42.1 | 23.8 |
+| Best-available (YOLOv9-s-608 + CCT-S-v2) | 64% | 0.72 | 0.79 | 223.2 | 25.8 | 248.9 | 4.0 |
+
+(Full per-instance data: `data/results_real/model_comparison.csv`;
+aggregated table: `data/results_real/model_comparison_summary.md`;
+chart: `data/results_real/model_comparison_chart.png`.)
+
+**Reading it honestly**: the bigger combination is better, but only
+modestly — +4 points of exact-match and +2 points of detection IoU —
+while costing roughly **6x the latency** (42ms → 249ms per plate) and
+cutting CPU throughput from ~24 plates/sec to ~4 plates/sec. Character
+accuracy barely moves (0.71 → 0.72), meaning most of the gap between
+the two OCR models shows up as full-string exact-match on a handful of
+already-close cases, not a broad accuracy improvement. For this
+project's stated goal — a CPU, real-time-capable pipeline — the
+current combination's accuracy-per-millisecond is clearly the better
+trade, and the current choice holds up under this comparison rather
+than being an accuracy compromise I got wrong. The bigger combination
+would only be worth it for a deployment that can tolerate ~250ms/plate
+and genuinely needs the last few points of exact-match (e.g. a
+low-throughput forensic-review tool rather than a live camera feed).
+
+## 6. Failure cases and why
 
 - **Defocus blur remains the hardest degradation** (20%→20%, completely
   flat). As before: it's a symmetric, non-directional blur with no
   kernel orientation to exploit, so unsharp masking is a weak tool
   against it. A blind-deconvolution approach that estimates the defocus
-  radius from the image itself would be the natural next step (§6).
+  radius from the image itself would be the natural next step (§8).
 - **Detection can fail completely and permanently on atypical vehicles.**
   The one deliberately-kept hard case (`us_12c6cb72...`) is a service
   utility truck with a small, low-contrast plate mounted on a cluttered,
@@ -214,7 +262,7 @@ completely changes what "success" looks like for this project:
   its native range, so some information is genuinely unrecoverable at
   this model size.
 
-## 6. Live demo
+## 7. Live demo
 
 `src/live_demo.py` runs the pipeline interactively on a file or webcam
 snapshot — useful for a live walkthrough rather than the offline batch
@@ -226,10 +274,10 @@ corrections the measurement calls for, then searches several candidate
 deblur corrections (a small set of deconvolution angles, unsharp masking,
 denoise+contrast) and keeps whichever the OCR model itself is most
 confident about — a pragmatic stand-in for true blind deconvolution.
-This design is a direct response to the §4/§5 finding that
+This design is a direct response to the §4/§6 finding that
 unconditional enhancement can hurt an already-good input.
 
-## 7. What I'd do with more time
+## 8. What I'd do with more time
 
 - Add a lightweight degradation classifier (blur amount, noise level,
   exposure histogram) to decide *whether* and *which* enhancement stage
@@ -242,5 +290,5 @@ unconditional enhancement can hurt an already-good input.
   benchmark) for tighter confidence intervals on the per-degradation
   numbers, and add a fine-tuned detector specifically on hard vehicle
   types (utility trucks, motorcycles) to address the detection failure
-  in §5 — this would be the one place in the whole project where
+  in §6 — this would be the one place in the whole project where
   fine-tuning a model would plausibly be worth the extra time.
