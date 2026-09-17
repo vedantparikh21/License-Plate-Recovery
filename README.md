@@ -1,4 +1,4 @@
-# License Plate Recovery — Forensic Enhancement Pipeline (v2: real data + pretrained models)
+# License Plate Recovery — Forensic Enhancement Pipeline (real data + pretrained models)
 
 A pipeline that detects a license plate in an image, corrects for blur,
 perspective distortion, low resolution, noise, exposure issues, and
